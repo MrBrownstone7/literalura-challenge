@@ -3,17 +3,10 @@ package com.aluracursos.literalura.principal;
 import com.aluracursos.literalura.controller.AutorController;
 import com.aluracursos.literalura.controller.LibroController;
 import com.aluracursos.literalura.model.Autor;
-import com.aluracursos.literalura.model.DatosLibro;
 import com.aluracursos.literalura.model.Libro;
-import com.aluracursos.literalura.model.ResultadoBusqueda;
-import com.aluracursos.literalura.repository.IAutorRepository;
-import com.aluracursos.literalura.repository.ILibroRepository;
-import com.aluracursos.literalura.service.ConsumoAPI;
-import com.aluracursos.literalura.service.ConvierteDatos;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,6 +17,7 @@ public class Principal {
     private List<Autor> autores = new ArrayList<>();
     private LibroController libroController;
     private AutorController autorController;
+    private boolean ingresaNumero = false;
 
     public Principal(LibroController libroC, AutorController autorC) {
         this.libroController = libroC;
@@ -32,55 +26,57 @@ public class Principal {
 
 
     public void muestraElMenu() {
-
-
         var opcion = -1;
+
+
         while (opcion != 0) {
             var menu = """
-                    ------------ LITERALURA ------------
-                    Elija la opción a traves de su numero:
-                    1 - Buscar libros
-                    2 - Mostrar libros registrados
-                    3 - Mostrar autores registrados
-                    4 - Mostrar autores vivos en un año especifico.
-                    5 - Mostrar libros por idioma
-                    
-                    0 - Salir
-                    """;
+                ------------ LITERALURA ------------
+                Elija la opción a través de su número:
+                1 - Buscar libros
+                2 - Mostrar libros registrados
+                3 - Mostrar autores registrados
+                4 - Mostrar autores vivos en un año específico
+                5 - Mostrar libros por idioma
+                0 - Salir
+                """;
             System.out.println(menu);
-            opcion = teclado.nextInt();
-            teclado.nextLine();
 
-            switch (opcion) {
-                case 1:
-                    buscarLibro();
-                    break;
-                case 2:
-                    mostrarLibrosBuscados();
-                    break;
-                case 3:
-                    mostrarAutoresBuscados();
-                    break;
-                case 4:
-                    mostrarAutoresVivosPorAno();
-                    break;
-                case 5:
-                    mostrarLibrosPorIdioma();
-                    break;
+            try {
+                opcion = teclado.nextInt();
+                teclado.nextLine(); // Limpiar el buffer
 
-                case 0:
-                    System.out.println("Cerrando la aplicación...");
-                    break;
-                default:
-                    System.out.println("Opción inválida");
+                switch (opcion) {
+                    case 1:
+                        buscarLibro();
+                        break;
+                    case 2:
+                        mostrarLibrosBuscados();
+                        break;
+                    case 3:
+                        mostrarAutoresBuscados();
+                        break;
+                    case 4:
+                        mostrarAutoresVivosPorAno();
+                        break;
+                    case 5:
+                        mostrarLibrosPorIdioma();
+                        break;
+                    case 0:
+                        System.out.println("Cerrando la aplicación...");
+                        break;
+                    default:
+                        System.out.println("Opción inválida, por favor selecciona una opción válida.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Ingresa una opción válida (número entero).");
+                teclado.nextLine(); // Limpiar el buffer en caso de error
             }
         }
-
     }
 
 
-
-    private void buscarLibro(){
+    private void buscarLibro() {
         System.out.println("Ingrese el titulo del libro: ");
         libroController.obtenerLibro();
     }
